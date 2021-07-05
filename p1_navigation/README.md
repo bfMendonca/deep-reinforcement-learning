@@ -36,7 +36,27 @@ The task is episodic, and in order to solve the environment, your agent must get
 
 ### Instructions
 
-Follow the instructions in `Navigation.ipynb` to get started with training your own agent!  
+
+The repository itself does not countains any other dependencies other than the specified by the deep reinforcement learning main repository. Given that the environment is correclty unzied into this folder and the executable path is correctly set at `Navigation.ipynb`, cell 2, the code has satisfied all requirements to run.
+
+The notebook is configured such it will train four of the five main variants for the project, as discussed at udacity course, and save their checkpoint with separate "pth" file. The variants are:
+
+1. Deep Q Network
+2. Double Deep Q Network
+3. Duelling Deep Q Network
+4. Duelling Double Deep Q Network
+
+There are an commented block for usage with prioritized experience replay but it must present some misuse of Pytorch as it takes very long time to train and did not presented an improvement from the other implementations,
+
+The networks checkpoints saved are, respectively:
+
+1. vanilla_checkpoint.pth
+2. ddqn_checkpoint.pth
+3. duelling_checkpoint.pth
+4. duelling_ddqn_checkpoint.pth
+
+The last cell of `Navigation.ipynb` is a plot of all variant scores as the episodes progressed during training.
+
 
 ### (Optional) Challenge: Learning from Pixels
 

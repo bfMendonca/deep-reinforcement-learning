@@ -50,21 +50,18 @@ class Agent():
         
         # Replay memory
         if( prioritize_weight != 0.0 ):
-            self.memory = PrioritizedReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, seed, prioritize_weight, beta_scheduler )
-            
+            self.memory = PrioritizedReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, seed, prioritize_weight, beta_scheduler )            
             self.init_td = init_td
             self.prioritize_weight = prioritize_weight
 
         else:
-            self.prioritize_weight = 0.0
-            
+            self.prioritize_weight = 0.0           
             self.memory = ReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, seed )
         
         self.init_td = init_td
         
         # Initialize time step (for updating every  steps)
         self.t_step = 0
-        
         self.ddqn = ddqn
     
         
@@ -79,6 +76,7 @@ class Agent():
             if len(self.memory) > BATCH_SIZE:
                 experiences = self.memory.sample()
                 self.learn(experiences, GAMMA)
+                
                 
     def eps_greedy_act(self, states, q_network):
         
@@ -249,7 +247,6 @@ class PrioritizedReplayBuffer:
         update_weights = np.power( len( self.memory ) * probs,  -self.beta )
         
         normalized_weights = update_weights / update_weights.max()
-        
         
         update_weights = torch.from_numpy(np.vstack( normalized_weights ).astype(np.float)).float().to(device)
         

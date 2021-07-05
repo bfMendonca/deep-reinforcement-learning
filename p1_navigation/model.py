@@ -54,8 +54,8 @@ class DuelingQNetwork(nn.Module):
 
         #State-Value Strean
         self.vfc1 = nn.Linear( state_size, 512 )
-        self.vfc2 = nn.Linear( 128, 64 )
-        self.vfc3 = nn.Linear( 64, action_size )
+        self.vfc2 = nn.Linear( 512, 512 )
+        self.vfc3 = nn.Linear( 512, action_size )
         
 
     def forward(self, state):
