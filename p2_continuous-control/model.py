@@ -12,7 +12,7 @@ def hidden_init(layer):
 class Actor(nn.Module):
     """Actor (Policy) Model."""
 
-    def __init__(self, state_size, action_size, seed, fc1_units=400, fc2_units=300):
+    def __init__(self, state_size, action_size, seed, fc1_units=256, fc2_units=128, batch_normalize=True ):
         """Initialize parameters and build model.
         Params
         ======
@@ -28,8 +28,10 @@ class Actor(nn.Module):
         self.fc2 = nn.Linear(fc1_units, fc2_units)
         self.fc3 = nn.Linear(fc2_units, action_size)
         
-        self.bn1 = nn.BatchNorm1d(fc1_units)
-        self.bn2 = nn.BatchNorm1d(fc2_units)
+        self.batch_normalize = batch_normalize
+        
+        if self.batch_normalize:
+            self.bn = nn.BatchNorm1d(fc1_units)
 
         self.reset_parameters()
 
@@ -44,7 +46,10 @@ class Actor(nn.Module):
             state = torch.unsqueeze(state,0)
 
         x = F.relu(self.fc1(state))
-        x = self.bn1(x)
+        
+        if self.batch_normalize:        
+            x = self.bn(x)
+            
         x = F.relu(self.fc2(x))
         return F.torch.tanh(self.fc3(x))
 
@@ -52,7 +57,7 @@ class Actor(nn.Module):
 class Critic(nn.Module):
     """Critic (Value) Model."""
 
-    def __init__(self, state_size, action_size, seed, fcs1_units=400, fc2_units=300 ):
+    def __init__(self, state_size, action_size, seed, fcs1_units=256, fc2_units=128, batch_normalize=True ):
         """Initialize parameters and build model.
         Params
         ======
@@ -68,7 +73,10 @@ class Critic(nn.Module):
         self.fc2 = nn.Linear(fcs1_units+action_size, fc2_units)
         self.fc3 = nn.Linear(fc2_units, 1 )
         
-        self.bn = nn.BatchNorm1d(fcs1_units)
+        self.batch_normalize = batch_normalize
+        
+        if self.batch_normalize:
+            self.bn = nn.BatchNorm1d(fcs1_units)
 
         self.reset_parameters()
 
@@ -80,7 +88,9 @@ class Critic(nn.Module):
     def forward(self, state, action):
         """Build a critic (value) network that maps (state, action) pairs -> Q-values."""
         xs = F.relu( self.fcs1(state) )
-        xs = self.bn(xs)
+        
+        if self.batch_normalize:
+            xs = self.bn(xs)
         
         x = torch.cat((xs, action), dim=1)
         x = F.relu(self.fc2(x))

@@ -31,7 +31,8 @@ class Agent():
                  noise_initial_gain=1.0,
                  noise_gain_decay=1.0,
                  sample_every_cycle=True, 
-                 gradient_limiter=False ):
+                 gradient_limiter=False, 
+                 batch_normalize=True ):
         """Initialize an Agent object.
         
         Params
@@ -48,16 +49,16 @@ class Agent():
         self.lr_critic = lr_critic
         
         # Actor Network (w/ Target Network)
-        self.actor_local = Actor(state_size, action_size, random_seed).to(device)
-        self.actor_target = Actor(state_size, action_size, random_seed).to(device)
+        self.actor_local = Actor(state_size, action_size, random_seed, batch_normalize=batch_normalize ).to(device)
+        self.actor_target = Actor(state_size, action_size, random_seed, batch_normalize=batch_normalize ).to(device)
 
         self.actor_optimizer = optim.Adam(self.actor_local.parameters(), 
                                           lr=self.lr_actor, 
                                           weight_decay=actor_weight_decay)
 
         # Critic Network (w/ Target Network)
-        self.critic_local = Critic(state_size, action_size, random_seed).to(device)
-        self.critic_target = Critic(state_size, action_size, random_seed).to(device)
+        self.critic_local = Critic(state_size, action_size, random_seed, batch_normalize=batch_normalize).to(device)
+        self.critic_target = Critic(state_size, action_size, random_seed, batch_normalize=batch_normalize).to(device)
         
         self.critic_optimizer = optim.Adam(self.critic_local.parameters(), 
                                            lr=self.lr_critic, 
