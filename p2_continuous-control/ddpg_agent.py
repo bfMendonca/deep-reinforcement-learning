@@ -9,7 +9,6 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 
-
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class Agent():
@@ -93,6 +92,12 @@ class Agent():
         # Replay memory
         self.memory = ReplayBuffer(action_size, self.buffer_size, self.batch_size, random_seed)
         
+    
+    def __repr__(self):
+        output_str = self.actor_local.__str__()
+        output_str +=  "\n\n\n"
+        output_str += self.critic_local.__str__()
+        return output_str
     
     def step(self, state, action, reward, next_state, done):
         
