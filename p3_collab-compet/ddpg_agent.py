@@ -93,7 +93,13 @@ class Agent():
         # Replay memory
         self.memory = ReplayBuffer(action_size, self.buffer_size, self.batch_size, random_seed)
         
+    def __repr__(self):
+        output_str = self.actor_local.__str__()
+        output_str +=  "\n\n\n"
+        output_str += self.critic_local.__str__()
+        return output_str
     
+        
     def step(self, state, action, reward, next_state, done):
         
         """Save experience in replay memory, and use random sample from buffer to learn."""
